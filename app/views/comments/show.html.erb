@@ -1,0 +1,23 @@
+<p>
+  <strong>Body:</strong>
+  <%= @comment.body %>
+</p>
+
+
+
+<p>
+  <strong>User:</strong>
+  <% if @comment.user %>
+    <%= @comment.user.userName %> &emsp;&emsp;&emsp;
+  <% else %>
+    Unknown &emsp;&emsp;&emsp;
+  <% end %>
+</p>
+
+<p>
+  <strong>Post:</strong>
+  <%= @comment.post.tilte %>
+</p>
+
+<%= link_to 'Edit', edit_comment_path(@comment) %> |
+<%= link_to 'Back', comments_path %>

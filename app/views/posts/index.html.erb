@@ -1,0 +1,27 @@
+<h1>Posts</h1>
+
+<% if user_signed_in? %>
+  <%= link_to "New Post", new_post_path, class: "btn btn-default btn-lg" %>
+<% end %>
+
+<br><br>
+
+<% if @posts.empty? %>
+  <h1 id="no-posts">No Posts Created</h1>
+<% else %>
+  <% @posts.each do |post| %>
+    <div class="well well-lg" style="width: 90%; padding-top: 0px">
+      <div class="posts-title">
+        <h3><%= link_to post.tilte, post_path(post) %></h3>
+      </div>
+      <div class="posts-body" >
+        <%= post.body %>
+      </div>
+      <div class="author">
+        <small>Created at <%= time_ago_in_words(post.created_at) %> by: <%= post.user.userName %></small>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+

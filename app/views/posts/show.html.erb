@@ -1,0 +1,96 @@
+<article class="detail-article">
+  <h1 class="article-detail-title">
+    <%= @post.tilte %>
+  </h1>
+  <div class="glyphicon glyphicon-calendar" id="article-date">
+    <%= @post.created_at.strftime("%b %d, %Y") %>
+  </div>
+  <div class="well well-lg" style="width: 85%">
+  <div class="posts-body">
+    <%= @post.body %>
+  </div>
+  </div>
+  <br>
+  <br>
+  <% if user_signed_in? && current_user == @post.user %>
+    <div class="edit-delete">
+      <%= link_to "Edit Post", edit_post_path(@post), class: "btn btn-primary btn-lg btn-space", style: "color: white" %>
+      <%= link_to "Delete Post", post_path(@post), method: :delete,
+                  data: { confirm: "Are you sure you want to delete article?" },
+                  class: "btn btn-primary btn-lg btn-space" , style: "color: white" %>
+    </div>
+  <% end %>
+</article>
+
+<hr>
+
+<div class="col-md-9">
+  <%= form_for [@post, @comment],  :html => { class:'form-horizontal', role: 'form' } do |form| %>
+    <% if @comment.errors.any? %>
+      <div class="panel panel-danger col-md-offset-1">
+        <div class="panel-heading">
+          <h2 class="panel-title">
+            <%= pluralize(@comment.errors.count,"error") %>
+            prohibited this comment from being saved
+          </h2>
+          <div class="panel-body">
+            <ul>
+              <% @comment.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <div class="control-label col-md-2">
+        <%= form.label :body, "New comment" %>
+      </div>
+      <div class="col-md-10">
+        <%= form.text_area :body, rows: 5, class: 'form-control', placeholder: 'Your comment' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <%= form.submit "Add comment", class: 'btn btn-primary btn-lg pull-right' %>
+        <p id="notice"><%= notice %></p>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="col-md-12">
+  <header>
+    <h2>Comments</h2>
+  </header>
+  <% if @post.comments.any? %>
+    <div id="messages">
+      <% @post.comments.each do |comment| %>
+        <% if comment.id != nil %>
+          <div class="comment-body">
+            <%= comment.body %>
+          </div>
+          <div class="comment-time">
+            <%= time_ago_in_words(comment.created_at) %>
+            ago by <% if comment.user %>
+              <%= comment.user.userName %>
+            <% else %>
+              Unknown
+            <% end %>
+            <% if current_user %>
+            <% if current_user.id == comment.user_id %>
+                <%= link_to 'Edit', edit_post_comment_path(comment) %>
+              <%= link_to 'Delete', post_comment_url(comment) , method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% end %>
+            <% end %>
+
+          </div>
+          <hr>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    There is no comments to show.
+  <% end %>
+</div>
